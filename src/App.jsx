@@ -5,7 +5,7 @@ import Products from "./components/Products";
 import Footer from "./components/Footer";
 import Cart from "./pages/Cart";
 import './App.css'
-import Home from './Components/Home';
+import Home from './components/Home';
 import Checkout from './pages/Checkout';
 // src/app.jsx
 import {Routes, Route } from "react-router-dom";
