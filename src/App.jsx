@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import React from 'react'
 import Navbar from "./components/Navbar";
-import Products from "./Components/Products";
+import Products from "./components/Products";
 import Footer from "./components/Footer";
 import Cart from "./pages/Cart";
 import './App.css'
