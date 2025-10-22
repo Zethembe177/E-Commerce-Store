@@ -12,31 +12,28 @@ const Products = () => {
   const [similarProducts, setSimilarProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [loadingSelected, setLoadingSelected] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
 
   const dispatch = useDispatch();
   const addProduct = (product) => dispatch(addCart(product));
 
   // Fetch all products
   useEffect(() => {
+    // Only run this when viewing all products (not a single product)
+    if (id) return;
+
     const fetchProducts = async () => {
       setLoadingProducts(true);
       try {
-        const res = await fetch("http://localhost:5000/api/products");
+        let url = "http://localhost:5000/api/products";
+        if (selectedCategory !== "all") {
+          url = `http://localhost:5000/api/products/category/${encodeURIComponent(selectedCategory)}`;
+        }
+
+        const res = await fetch(url);
         const data = await res.json();
         setProducts(data);
-
-        if (id) {
-          const product = data.find((p) => p.id === parseInt(id));
-          setSelectedProduct(product);
-
-          if (product?.category) {
-            const res2 = await fetch(
-              `http://localhost:5000/api/products/category/${product.category}`
-            );
-            const similar = await res2.json();
-            setSimilarProducts(similar.filter(p => p.id !== product.id));
-          }
-        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -45,6 +42,35 @@ const Products = () => {
     };
 
     fetchProducts();
+  }, [selectedCategory, id]); // runs when category changes or id resets
+
+
+  //we need to modify the useEffect make it responsible ONLY for single product + similar products
+  useEffect(() => {
+    if (!id) return; 
+    const fetchSingleProduct = async () => {
+      setLoadingSelected(true);
+      try {
+        const res = await fetch("http://localhost:5000/api/products");
+        const data = await res.json();
+        const product = data.find((p) => p.id === parseInt(id));
+        setSelectedProduct(product);
+
+        if (product?.category) {
+          const res2 = await fetch(
+            `http://localhost:5000/api/products/category/${product.category}`
+          );
+          const similar = await res2.json();
+          setSimilarProducts(similar.filter((p) => p.id !== product.id));
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingSelected(false);
+      }
+    };
+
+    fetchSingleProduct();
   }, [id]);
 
   // Skeleton for loading products
@@ -67,6 +93,22 @@ const Products = () => {
   const ShowAllProducts = () => (
     <div className="container py-5">
       <h2 className="text-center text-2xl font-bold">All Products</h2>
+      {/* Category Filter */}
+  <div className="text-center my-3">
+    <select
+      value={selectedCategory}
+      onChange={(e) => setSelectedCategory(e.target.value)}
+      className="border px-3 py-2 rounded"
+    >
+      <option value="all">All</option>
+      <option value="electronics">Electronics</option>
+      <option value="jewelery">Jewelery</option>
+      <option value="men's clothing">Men's Clothing</option>
+      <option value="women's clothing">Women's Clothing</option>
+    </select>
+  </div>
+
+      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {products.map((product) => (
           <div key={product.id} className="card p-4 text-center">
