@@ -21,7 +21,7 @@ const Products = () => {
     const fetchProducts = async () => {
       setLoadingProducts(true);
       try {
-        const res = await fetch("https://fakestoreapi.com/products");
+        const res = await fetch("http://localhost:5000/api/products");
         const data = await res.json();
         setProducts(data);
 
@@ -31,7 +31,7 @@ const Products = () => {
 
           if (product?.category) {
             const res2 = await fetch(
-              `https://fakestoreapi.com/products/category/${product.category}`
+              `http://localhost:5000/api/products/category/${product.category}`
             );
             const similar = await res2.json();
             setSimilarProducts(similar.filter(p => p.id !== product.id));
