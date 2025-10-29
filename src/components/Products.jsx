@@ -26,9 +26,9 @@ const Products = () => {
     const fetchProducts = async () => {
       setLoadingProducts(true);
       try {
-        let url = "http://localhost:5000/api/products";
+        let url = "${import.meta.env.VITE_API_BASE_URL}/api/products";
         if (selectedCategory !== "all") {
-          url = `http://localhost:5000/api/products/category/${encodeURIComponent(selectedCategory)}`; //we had to encodeURI component to handle special characters like apostrophes
+          url =`${import.meta.env.VITE_API_BASE_URL}/api/products/category/${encodeURIComponent(selectedCategory)}`; //we had to encodeURI component to handle special characters like apostrophes
         }
 
         const res = await fetch(url);
@@ -51,14 +51,14 @@ const Products = () => {
     const fetchSingleProduct = async () => {
       setLoadingSelected(true);
       try {
-        const res = await fetch("http://localhost:5000/api/products");
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products`);
         const data = await res.json();
         const product = data.find((p) => p.id === parseInt(id));
         setSelectedProduct(product);
 
         if (product?.category) {
           const res2 = await fetch(
-            `http://localhost:5000/api/products/category/${product.category}`
+           `${import.meta.env.VITE_API_BASE_URL}/api/products/category/${encodeURIComponent(product.category)}`
           );
           const similar = await res2.json();
           setSimilarProducts(similar.filter((p) => p.id !== product.id));
