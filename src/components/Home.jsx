@@ -10,7 +10,7 @@ const Home = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const res = await fetch("http://localhost:5000/api/products");
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products`);
         const data = await res.json();
         setProducts(data.slice(0, 3)); // pick only 3 products
       } catch (err) {

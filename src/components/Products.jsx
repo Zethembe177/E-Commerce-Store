@@ -28,7 +28,7 @@ const Products = () => {
       try {
         let url = "http://localhost:5000/api/products";
         if (selectedCategory !== "all") {
-          url = `http://localhost:5000/api/products/category/${encodeURIComponent(selectedCategory)}`;
+          url = `http://localhost:5000/api/products/category/${encodeURIComponent(selectedCategory)}`; //we had to encodeURI component to handle special characters like apostrophes
         }
 
         const res = await fetch(url);
