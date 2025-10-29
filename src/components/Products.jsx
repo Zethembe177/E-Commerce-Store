@@ -26,7 +26,7 @@ const Products = () => {
     const fetchProducts = async () => {
       setLoadingProducts(true);
       try {
-        let url = "${import.meta.env.VITE_API_BASE_URL}/api/products";
+        let url = `${import.meta.env.VITE_API_BASE_URL}/api/products`;
         if (selectedCategory !== "all") {
           url =`${import.meta.env.VITE_API_BASE_URL}/api/products/category/${encodeURIComponent(selectedCategory)}`; //we had to encodeURI component to handle special characters like apostrophes
         }
